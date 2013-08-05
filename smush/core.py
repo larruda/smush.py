@@ -10,9 +10,6 @@ __maintainer__ = 'Takashi Mizohata'
 class Smush():
     def __init__(self, **kwargs):
         from smush.scratch import Scratch
-        from smush import optimisers
-        from smush.optimisers import formats
-        from smush.optimisers.formats import png
         from smush.optimisers.formats.png import OptimisePNG
         from smush.optimisers.formats.jpg import OptimiseJPG
         from smush.optimisers.formats.gif import OptimiseGIF
