@@ -31,8 +31,9 @@ case the file name is in a database.*
   * ImageMagick - http://www.imagemagick.org
   * pngcrush - http://pmt.sourceforge.net/pngcrush/
   * jpegtran from libjpeg
+  * pngnq
 
-  sudo apt-get install -y libjpeg-progs gifsicle imagemagick pngcrush libpng-dev
+  sudo apt-get install -y libjpeg-progs gifsicle imagemagick pngcrush libpng-dev pngnq
 
 ## Usage
 
