@@ -6,7 +6,9 @@ import sys
 import shutil
 import logging
 import tempfile
-from scratch import Scratch
+
+from smush.scratch import Scratch
+
 
 class Optimiser(object):
     """
@@ -18,7 +20,6 @@ class Optimiser(object):
 
     # string to place between the basename and extension of output images
     output_suffix = "-opt.smush"
-
 
     def __init__(self, **kwargs):
         # the number of times the _get_command iterator has been run
@@ -40,7 +41,6 @@ class Optimiser(object):
         self.iterations = 0
         self.input = input
 
-
     def _get_command(self):
         """
         Returns the next command to apply
@@ -52,7 +52,6 @@ class Optimiser(object):
             self.iterations += 1
 
         return command
-
 
     def _get_output_file_name(self):
         """
@@ -66,13 +65,11 @@ class Optimiser(object):
         finally:
             os.close(temp[0])
 
-
     def __replace_placeholders(self, command, input, output):
         """
         Replaces the input and output placeholders in a string with actual parameter values
         """
         return command.replace(Optimiser.input_placeholder, input).replace(Optimiser.output_placeholder, output)
-
 
     def _keep_smallest_file(self, input, output):
         """
@@ -83,7 +80,7 @@ class Optimiser(object):
 
         # if the image was optimised (output is smaller than input), overwrite the input file with the output
         # file.
-        if (output_size > 0 and output_size < input_size):
+        if 0 < output_size < input_size:
             try:
                 shutil.copyfile(output, input)
                 self.files_optimised += 1
@@ -95,7 +92,6 @@ class Optimiser(object):
         # delete the output file
         os.unlink(output)
         
-
     def _is_acceptable_image(self, input):
         """
         Returns whether the input image can be used by a particular optimiser.
@@ -113,16 +109,15 @@ class Optimiser(object):
             sys.exit(1)
         except:
             # most likely no file matched
-            if self.quiet == False:
+            if not self.quiet:
                 logging.warning("Cannot identify file.")
             return False
         if retcode != 0:
-            if self.quiet == False:
+            if not self.quiet:
                 logging.warning("Cannot identify file.")
             return False
         output = self.stdout.read().strip()
         return output.startswith(self.format)
-
 
     def optimise(self):
         """
@@ -156,13 +151,12 @@ class Optimiser(object):
             if retcode != 0:
                 # gifsicle seems to fail by the file size?
                 os.unlink(output_file_name)
-            else :
-                if self.list_only == False:
+            else:
+                if not self.list_only:
                     # compare file sizes if the command executed successfully
                     self._keep_smallest_file(self.input, output_file_name)
                 else:
                     self._list_only(self.input, output_file_name)
-
 
     def _list_only(self, input, output):
         """

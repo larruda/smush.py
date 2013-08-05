@@ -1,21 +1,23 @@
-#!/usr/bin/env python
-
 import sys, os, os.path, getopt, time, shlex, subprocess, logging
-from subprocess import CalledProcessError
-from optimiser.formats.png import OptimisePNG
-from optimiser.formats.jpg import OptimiseJPG
-from optimiser.formats.gif import OptimiseGIF
-from optimiser.formats.animated_gif import OptimiseAnimatedGIF
-from scratch import Scratch
 
-__author__     = 'al, Takashi Mizohata'
-__credit__     = ['al', 'Takashi Mizohata']
+__author__ = 'al, Takashi Mizohata'
+__credit__ = ['al', 'Takashi Mizohata']
 __maintainer__ = 'Takashi Mizohata'
 
 # there should be an option to keep or strip meta data (e.g. exif data) from jpegs
 
+
 class Smush():
     def __init__(self, **kwargs):
+        from smush.scratch import Scratch
+        from smush import optimisers
+        from smush.optimisers import formats
+        from smush.optimisers.formats import png
+        from smush.optimisers.formats.png import OptimisePNG
+        from smush.optimisers.formats.jpg import OptimiseJPG
+        from smush.optimisers.formats.gif import OptimiseGIF
+        from smush.optimisers.formats.animated_gif import OptimiseAnimatedGIF
+
         self.optimisers = {
             'PNG': OptimisePNG(**kwargs),
             'JPEG': OptimiseJPG(**kwargs),
@@ -53,7 +55,6 @@ class Smush():
             self.optimisers[key].set_input(file)
             self.optimisers[key].optimise()
 
-
     def process(self, dir, recursive):
         """
         Iterates through the input directory optimising files
@@ -66,7 +67,7 @@ class Smush():
                 for file in os.listdir(dir):
                     if self.__checkExclude(file):
                         continue
-                        
+
                     if self.identify_mime:
                         import mimetypes
                         (type,encoding) = mimetypes.guess_type(file)
@@ -77,7 +78,6 @@ class Smush():
             elif os.path.isfile(dir):
                 self.__smush(dir)
 
-
     def __walk(self, dir, callback):
         """ Walks a directory, and executes a callback on each file """
         dir = os.path.abspath(dir)
@@ -85,10 +85,10 @@ class Smush():
         for file in os.listdir(dir):
             if self.__checkExclude(file):
                 continue
-            
+
             if self.identify_mime:
                 import mimetypes
-                (type,encoding) = mimetypes.guess_type(file)        
+                (type,encoding) = mimetypes.guess_type(file)
                 if type and (type[:5] != "image"):
                     continue
 
@@ -96,7 +96,6 @@ class Smush():
             callback(nfile)
             if os.path.isdir(nfile):
                 self.__walk(nfile, callback)
-
 
     def __get_image_format(self, input):
         """
@@ -123,7 +122,6 @@ class Smush():
 
         return self.stdout.read().strip()[:6]
 
-
     def stats(self):
         output = []
         output.append('\n%d files scanned:' % (self.__files_scanned))
@@ -134,8 +132,8 @@ class Smush():
             # gets counted twice
             output.append('    %d %ss optimised out of %d scanned. Saved %dkb' % (
                     optimiser.files_optimised // 2,
-                    key, 
-                    optimiser.files_scanned, 
+                    key,
+                    optimiser.files_scanned,
                     optimiser.bytes_saved / 1024))
             arr.extend(optimiser.array_optimised_file)
 
@@ -194,7 +192,7 @@ def main():
             usage()
             sys.exit(2)
 
-    if quiet == True:
+    if quiet:
         logging.basicConfig(
             level=logging.WARNING,
             format='%(asctime)s %(levelname)s %(message)s',

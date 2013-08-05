@@ -1,8 +1,10 @@
 import os.path
 import shutil
-from optimiser.optimiser import Optimiser
-from animated_gif import OptimiseAnimatedGIF
 import logging
+
+from ..optimiser import Optimiser
+from .animated_gif import OptimiseAnimatedGIF
+
 
 class OptimiseGIF(Optimiser):
     """

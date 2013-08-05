@@ -1,6 +1,8 @@
 import os.path
-from optimiser.optimiser import Optimiser
 import logging
+
+from ..optimiser import Optimiser
+
 
 class OptimiseJPG(Optimiser):
     """

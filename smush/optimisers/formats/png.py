@@ -1,5 +1,7 @@
 import os.path
-from optimiser.optimiser import Optimiser
+
+from ..optimiser import Optimiser
+
 
 class OptimisePNG(Optimiser):
     """
@@ -7,29 +9,19 @@ class OptimisePNG(Optimiser):
     (http://pmt.sourceforge.net/pngcrush/) to crush them.
     """
 
-
     def __init__(self, **kwargs):
         super(OptimisePNG, self).__init__(**kwargs)
 
-        if kwargs.get('quiet') == True:
+        if kwargs.get('quiet'):
             pngcrush = 'pngcrush -rem alla -brute -reduce -q "__INPUT__" "__OUTPUT__"'
         else:
             pngcrush = 'pngcrush -rem alla -brute -reduce "__INPUT__" "__OUTPUT__"'
 
         # the command to execute this optimiser
-        self.commands = ('pngnq -n 256 -o "__OUTPUT__" "__INPUT__"', pngcrush)
+        self.commands = ('pngnq -n 256 -e "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
 
         # format as returned by 'identify'
         self.format = "PNG"
 
-
-#    def _get_output_file_name(self):
-#        """
-#        Returns the input file name with Optimiser.output_suffix inserted before the extension
-#        """
-#        (basename, extension) = os.path.splitext(self.input)
-#
-#        if extension.lower() == '.png':
-#            return basename + Optimiser.output_suffix
-#
-#        return self.input + Optimiser.output_suffix
+    def _get_output_file_name(self):
+        return os.path.splitext(self.input)[0] + self.output_suffix
