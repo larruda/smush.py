@@ -18,7 +18,7 @@ class OptimisePNG(Optimiser):
             pngcrush = 'pngcrush -rem alla -brute -reduce "__INPUT__" "__OUTPUT__"'
 
         # the command to execute this optimiser
-        self.commands = ('pngnq -n 256 -e "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
+        self.commands = ('pngnq -f -n 256 -e "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
 
         # format as returned by 'identify'
         self.format = "PNG"

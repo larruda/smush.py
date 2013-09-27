@@ -12,14 +12,14 @@ class Smush():
         from smush.scratch import Scratch
         from smush.optimisers.formats.png import OptimisePNG
         from smush.optimisers.formats.jpg import OptimiseJPG
-        from smush.optimisers.formats.gif import OptimiseGIF
-        from smush.optimisers.formats.animated_gif import OptimiseAnimatedGIF
+        #from smush.optimisers.formats.gif import OptimiseGIF
+        #from smush.optimisers.formats.animated_gif import OptimiseAnimatedGIF
 
         self.optimisers = {
             'PNG': OptimisePNG(**kwargs),
             'JPEG': OptimiseJPG(**kwargs),
-            'GIF': OptimiseGIF(**kwargs),
-            'GIFGIF': OptimiseAnimatedGIF(**kwargs)
+            #'GIF': OptimiseGIF(**kwargs),
+            #'GIFGIF': OptimiseAnimatedGIF(**kwargs)
         }
 
         self.__files_scanned = 0
@@ -68,11 +68,12 @@ class Smush():
                     if self.identify_mime:
                         import mimetypes
                         (type,encoding) = mimetypes.guess_type(file)
-                        if type and (type[:5] != "image"):
+			#logging.info('Image MIME type: %s' % (type))
+                        if type and (type[:5] != "image" or type == 'image/gif'):
                             continue
 
                     self.__smush(os.path.join(dir, file))
-            elif os.path.isfile(dir):
+	    elif os.path.isfile(dir) and not (dir[-4:] == '.gif' or dir[-4:] == '.GIF'):
                 self.__smush(dir)
 
     def __walk(self, dir, callback):
@@ -86,7 +87,7 @@ class Smush():
             if self.identify_mime:
                 import mimetypes
                 (type,encoding) = mimetypes.guess_type(file)
-                if type and (type[:5] != "image"):
+		if type and (type[:5] != "image" or type == 'image/gif'):
                     continue
 
             nfile = os.path.join(dir, file)
@@ -163,7 +164,7 @@ def main():
     recursive = False
     quiet = False
     strip_jpg_meta = False
-    exclude = ['.bzr', '.git', '.hg', '.svn']
+    exclude = ['.bzr', '.git', '.hg', '.svn', '.gif']
     list_only = False
     identify_mime = False
 
