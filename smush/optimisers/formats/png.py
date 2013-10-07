@@ -18,9 +18,14 @@ class OptimisePNG(Optimiser):
             pngcrush = 'pngcrush -rem alla -brute -reduce "__INPUT__" "__OUTPUT__"'
 
         # the command to execute this optimiser
-        self.commands = ('pngnq -f -n 256 -e "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
+        
+	# Use pngnq
+	# self.commands = ('pngnq -f -n 256 -e "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
 
-        # format as returned by 'identify'
+        # Use pngquant
+	self.commands = ('pngquant --force --speed 1 --ext "{obj.output_suffix}" "__INPUT__"'.format(obj=self), pngcrush)
+
+	# format as returned by 'identify'
         self.format = "PNG"
 
     def _get_output_file_name(self):
